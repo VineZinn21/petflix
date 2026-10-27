@@ -1,0 +1,11 @@
+digraph G { rankdir=TB; graph [fontname="DejaVu Sans", pad=0.3, nodesep=0.5, ranksep=0.8, splines=true]; node [fontname="DejaVu Sans", fontsize=11, shape=box, style="rounded,filled", fontcolor=white, color="#ffffff00", margin="0.2,0.12"]; edge [fontname="DejaVu Sans", fontsize=9, color="#555555", fontcolor="#333333"];
+subgraph cluster_id { label="Contexto: Identidade e Acesso"; fontname="DejaVu Sans"; style="rounded,filled"; fillcolor="#EEF4FB"; color="#438DD5";
+ u [label="User\n(Aggregate Root)\nEmail, Username, Password(VO)", fillcolor="#1168BD"]; }
+subgraph cluster_ct { label="Contexto: Catálogo de Vídeos"; fontname="DejaVu Sans"; style="rounded,filled"; fillcolor="#EEF4FB"; color="#438DD5";
+ v [label="Video\n(Aggregate Root)\nTitle, Description, MediaFile(VO)", fillcolor="#1168BD"]; cat [label="Category\n(Entity)", fillcolor="#438DD5"]; }
+subgraph cluster_en { label="Contexto: Engajamento"; fontname="DejaVu Sans"; style="rounded,filled"; fillcolor="#EEF4FB"; color="#438DD5";
+ l [label="Like\n(Aggregate Root)", fillcolor="#1168BD"]; c [label="Comment\n(Aggregate Root)", fillcolor="#1168BD"]; f [label="Follow\n(Aggregate Root)", fillcolor="#1168BD"]; }
+subgraph cluster_ds { label="Contexto: Descoberta"; fontname="DejaVu Sans"; style="rounded,filled"; fillcolor="#EEF4FB"; color="#438DD5";
+ s [label="Feed / Busca\n(Read Model)", fillcolor="#438DD5"]; }
+v -> u [label="authorId (referência por ID)", style=dashed]; l -> v [label="videoId", style=dashed]; l -> u [label="userId", style=dashed]; c -> v [label="videoId", style=dashed]; c -> u [label="userId", style=dashed]; f -> u [label="followerId / followedId", style=dashed]; s -> v [label="consulta", style=dashed]; v -> cat [label="categoryId", style=dashed];
+}

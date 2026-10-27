@@ -1,0 +1,15 @@
+digraph G { rankdir=TB; graph [fontname="DejaVu Sans", pad=0.3, nodesep=0.45, ranksep=0.7, splines=true]; node [fontname="DejaVu Sans", fontsize=11, shape=box, style="rounded,filled", fontcolor=white, color="#ffffff00", margin="0.2,0.12"]; edge [fontname="DejaVu Sans", fontsize=9, color="#555555", fontcolor="#333333"];
+subgraph cluster_api { label="API Petflix — componentes da camada de comunicação"; fontname="DejaVu Sans"; fontsize=12; style="rounded,dashed"; color="#438DD5";
+uc [label="Casos de uso\n[Application]\nToggleLike, PostComment,\nUploadVideo", fillcolor="#2E6FB7"];
+dom [label="Eventos de domínio\n[Domain]\nVideoLiked, CommentPosted,\nVideoUploaded", fillcolor="#2E6FB7"];
+port [label="EventPublisher\n[Porta de saída]\npublish(event)", fillcolor="#2E6FB7"];
+outbox [label="OutboxRepository\n[Adaptador MySQL]\nGrava evento na mesma\ntransação do caso de uso", fillcolor="#85BBF0", fontcolor="#111111"];
+relay [label="Outbox Relay\n[Infraestrutura]\nLê eventos pendentes\ne publica no broker", fillcolor="#85BBF0", fontcolor="#111111"];
+amqp [label="RabbitMqPublisher\n[Adaptador AMQP]\namqplib, confirm channel", fillcolor="#85BBF0", fontcolor="#111111"];
+{rank=same; uc; dom} {rank=same; port; outbox} {rank=same; relay; amqp}
+}
+mq [label="RabbitMQ\n[Exchange topic]", fillcolor="#C2410C"];
+c1 [label="NotificationConsumer\n[Worker]\nidempotente, com retry/DLQ", fillcolor="#C2410C"];
+c2 [label="MetricsConsumer\n[Worker]\nidempotente, com retry/DLQ", fillcolor="#C2410C"];
+uc -> dom [label="gera"]; uc -> port [label="usa"]; port -> outbox [label="implementado por"]; outbox -> relay [label="eventos\npendentes"]; relay -> amqp [label="publica"]; amqp -> mq; mq -> c1; mq -> c2;
+}

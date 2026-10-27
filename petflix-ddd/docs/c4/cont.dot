@@ -1,0 +1,17 @@
+digraph G { rankdir=TB; graph [fontname="DejaVu Sans", pad=0.3, nodesep=0.45, ranksep=0.7, splines=true]; node [fontname="DejaVu Sans", fontsize=11, shape=box, style="rounded,filled", fontcolor=white, color="#ffffff00", margin="0.2,0.12"]; edge [fontname="DejaVu Sans", fontsize=9, color="#555555", fontcolor="#333333"];
+user [label="Usuário\n[Pessoa]", fillcolor="#08427B"];
+spa [label="SPA Petflix\n[Container: Vue 3 + Vite]\nTelas de feed, vídeo,\nperfil e administração", fillcolor="#438DD5"];
+api [label="API Petflix\n[Container: Node.js + Express]\nMonólito modular em DDD:\nusuário, vídeo, engajamento", fillcolor="#438DD5"];
+db [label="Banco de dados\n[Container: MySQL]\nUsuários, vídeos, curtidas,\ncomentários e outbox", shape=cylinder, fillcolor="#438DD5"];
+fs [label="Armazenamento de arquivos\n[Container: disco / S3]\nVídeos e fotos de perfil", shape=cylinder, fillcolor="#438DD5"];
+mq [label="Message Broker\n[Container: RabbitMQ]\nExchange petflix.events (topic)\nfilas duráveis + DLQ", fillcolor="#C2410C"];
+wm [label="Worker de Métricas\n[Container: Node.js]\nAtualiza contadores\n(curtidas, comentários, views)", fillcolor="#C2410C"];
+wn [label="Worker de Notificações\n[Container: Node.js]\nConsome eventos e envia\ne-mails/push", fillcolor="#C2410C"];
+mail [label="Serviço de e-mail/Push\n[Sistema externo]", fillcolor="#999999"];
+{rank=same; user; spa} {rank=same; db; fs; mq} {rank=same; wm; wn; mail}
+user -> spa [label="Usa"]; spa -> api [label="JSON/HTTPS"];
+api -> db [label="Lê e grava\n(Sequelize)"]; api -> fs [label="Salva/lê\narquivos"];
+api -> mq [label="Publica eventos\n(AMQP, via outbox)"];
+mq -> wm [label="video.liked\ncomment.posted\nvideo.viewed"]; mq -> wn [label="video.liked\ncomment.posted"];
+wn -> mail [label="SMTP/API"]; wm -> db [label="UPDATE\ncontadores"];
+}

@@ -1,0 +1,10 @@
+digraph G { rankdir=TB; graph [fontname="DejaVu Sans", pad=0.3, nodesep=0.5, ranksep=0.8, splines=true]; node [fontname="DejaVu Sans", fontsize=11, shape=box, style="rounded,filled", fontcolor=white, color="#ffffff00", margin="0.2,0.12"]; edge [fontname="DejaVu Sans", fontsize=9, color="#555555", fontcolor="#333333"];
+tutor [label="Tutor de pet\n[Pessoa]\nAssiste, curte e comenta\nvídeos; envia vídeos", fillcolor="#08427B"];
+esp [label="Especialista\n[Pessoa]\nPublica conteúdo educativo\ne responde a comentários", fillcolor="#08427B"];
+adm [label="Administrador\n[Pessoa]\nModera usuários, vídeos\ne categorias", fillcolor="#08427B"];
+pf [label="Petflix\n[Sistema de software]\nPlataforma de vídeos\neducativos sobre pets\ncom camada de mensageria", fillcolor="#1168BD", width=3];
+mail [label="Serviço de e-mail/Push\n[Sistema externo]\nEntrega notificações\nao usuário", fillcolor="#999999"];
+{rank=same; tutor; esp; adm}
+tutor -> pf [label="Usa (HTTPS)"]; esp -> pf [label="Usa (HTTPS)"]; adm -> pf [label="Administra (HTTPS)"];
+pf -> mail [label="Envia notificações\n(SMTP/API)"];
+}
